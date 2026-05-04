@@ -1,0 +1,14 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Logs
+*.log
+
+# OS metadata
+.DS_Store
