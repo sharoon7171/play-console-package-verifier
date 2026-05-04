@@ -3,13 +3,123 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#18181b" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="author" content="SQ Tech" />
+
+    <title>Play Console Package Verifier — Register an Android Package Name with a Signed APK</title>
+    <meta
+      name="description"
+      content="Free in-browser tool that builds the proof-of-ownership APK required by Android Developer Console and Google Play Console to register a package name. Adds assets/adi-registration.properties and signs the APK with your private key. No Android Studio, no Gradle, no command line. Files never leave your device."
+    />
+
+    <link rel="canonical" href="https://play-console-package-verifier.vercel.app/" />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2318181b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Play Console Package Verifier" />
+    <meta property="og:url" content="https://play-console-package-verifier.vercel.app/" />
+    <meta property="og:title" content="Play Console Package Verifier — Register an Android Package Name with a Signed APK" />
+    <meta
+      property="og:description"
+      content="Builds the proof-of-ownership APK required by Android Developer Console and Play Console to register a package name. Adds assets/adi-registration.properties and signs the APK in your browser. No Android Studio, no command line."
+    />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Play Console Package Verifier" />
+    <meta
+      name="twitter:description"
+      content="Generate the proof-of-ownership APK Android Developer Console and Play Console need to register a package name. Signs in your browser. No SDK, no CLI."
+    />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <title>Play Console Package Verifier</title>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Play Console Package Verifier",
+        "url": "https://play-console-package-verifier.vercel.app/",
+        "description": "Builds the proof-of-ownership APK that Android Developer Console and Google Play Console require to register an Android package name. Adds assets/adi-registration.properties and signs the APK with your private key in the browser — no Android Studio, Gradle, or command-line tools needed.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any (browser)",
+        "browserRequirements": "Requires a modern desktop or mobile browser with JavaScript enabled.",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Organization",
+          "name": "SQ Tech",
+          "url": "https://www.sqtech.dev/"
+        },
+        "sameAs": [
+          "https://github.com/sharoon7171/play-console-package-verifier"
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Play Console says my package name is not available — what do I do?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Play Console will only auto-register a package name that is not already known to Android. If the name is taken, you have to register it in Android Developer Console by uploading a release APK that contains assets/adi-registration.properties with the snippet the console gives you, signed with the corresponding private signing key. This tool builds that APK in your browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this also work for adding additional keys to a registered package name?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The 'add a key' flow in Android Developer Console uses the same adi-registration.properties proof of private key ownership."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my keystore or password uploaded anywhere?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The tool runs entirely client-side in your browser. Your APK, keystore, and password never leave your device."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need Android Studio, Gradle, jarsigner, apksigner, or keytool?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. The whole pipeline runs in the browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which keystore formats are supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "PKCS#12 keystores (.p12, .pfx) and the .jks / .keystore formats Android uses by default."
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body class="min-h-screen bg-zinc-50 text-zinc-900 antialiased font-sans">
     <div id="root" class="min-h-screen"></div>

@@ -56,9 +56,11 @@ export default function HelpInfo() {
         <div className="space-y-3 border-t border-zinc-200 pt-3">
           <InfoBlock icon={<HelpCircle className="h-3 w-3" />} title="What is this for?">
             <p>
-              Google Play Console requires you to verify ownership of your
-              app's package name. This tool generates a verification APK with
-              the snippet Play Console gave you.
+              The Android Developer Console (ADC) asks you to prove ownership
+              of your private signing key when you register an existing
+              package name or add an additional key. This tool builds the
+              verification APK that ADC asks for, using the snippet it gave
+              you.
             </p>
           </InfoBlock>
 
@@ -67,8 +69,8 @@ export default function HelpInfo() {
               ordered
               items={[
                 "Your published APK file.",
-                "The keystore used to sign that APK (with password).",
-                "The exact verification snippet from Play Console.",
+                "The keystore that holds the private key matching the SHA-256 fingerprint you registered (with password).",
+                "The exact verification snippet shown in the ADC registration dialog.",
               ]}
             />
           </InfoBlock>
@@ -79,13 +81,13 @@ export default function HelpInfo() {
               items={[
                 "Your APK is opened locally — nothing is uploaded.",
                 <>
-                  Verification file is added at{" "}
+                  Snippet is added at{" "}
                   <code className={codeCls}>assets/adi-registration.properties</code>.
                 </>,
                 <>
                   Result downloads as{" "}
                   <code className={codeCls}>{"<name>-verification.apk"}</code>{" "}
-                  for upload to Play Console.
+                  for upload to Android Developer Console.
                 </>,
               ]}
             />

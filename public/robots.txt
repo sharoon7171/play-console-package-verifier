@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://play-console-package-verifier.vercel.app/sitemap.xml
