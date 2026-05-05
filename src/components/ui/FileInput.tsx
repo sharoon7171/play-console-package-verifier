@@ -48,23 +48,28 @@ export default function FileInput({
         onChange={handleChange}
       />
       {file ? (
-        <div className="flex items-center justify-between gap-2 rounded-md border border-zinc-200 bg-white px-2.5 py-1.5">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-zinc-500">
+        <div className="flex items-center justify-between gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 shadow-[0_1px_0_rgba(255,255,255,0.7)_inset,0_1px_2px_rgba(2,6,23,0.06),0_2px_4px_-2px_rgba(2,6,23,0.06)]">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <span
+              aria-hidden="true"
+              className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-slate-950 text-white ring-1 ring-inset ring-white/10 shadow-[0_1px_0_rgba(255,255,255,0.18)_inset,0_2px_4px_rgba(2,6,23,0.25)]"
+            >
               {icon ?? <Upload className="h-3.5 w-3.5" aria-hidden="true" />}
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-medium text-zinc-900">
+              <p className="truncate text-xs font-bold tracking-tight text-slate-950">
                 {file.name}
               </p>
-              <p className="text-[11px] text-zinc-500">{formatBytes(file.size)}</p>
+              <p className="text-[11px] font-medium text-slate-500">
+                {formatBytes(file.size)}
+              </p>
             </div>
           </div>
-          <div className="flex shrink-0 items-center gap-0.5">
+          <div className="flex shrink-0 items-center gap-1">
             <button
               type="button"
               onClick={openPicker}
-              className="rounded px-1.5 py-0.5 text-[11px] font-medium text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900"
+              className="rounded-md px-2 py-1 text-[11px] font-bold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950"
             >
               Change
             </button>
@@ -72,7 +77,7 @@ export default function FileInput({
               type="button"
               onClick={handleRemove}
               aria-label="Remove file"
-              className="rounded p-0.5 text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900"
+              className="rounded-md p-1 text-slate-500 transition hover:bg-rose-50 hover:text-rose-600"
             >
               <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -82,12 +87,15 @@ export default function FileInput({
         <button
           type="button"
           onClick={openPicker}
-          className="group flex w-full items-center gap-2 rounded-md border border-dashed border-zinc-300 bg-white px-2.5 py-1.5 text-left transition hover:border-zinc-400 hover:bg-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/20"
+          className="group flex w-full items-center gap-2.5 rounded-lg border border-dashed border-slate-300 bg-white px-3 py-2 text-left transition hover:border-blue-600 hover:bg-blue-50/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600/30"
         >
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-zinc-500 transition group-hover:text-zinc-700">
+          <span
+            aria-hidden="true"
+            className="grid h-7 w-7 shrink-0 place-items-center rounded-md bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-200/80 transition group-hover:bg-slate-950 group-hover:text-white group-hover:ring-white/10"
+          >
             {icon ?? <Upload className="h-3.5 w-3.5" aria-hidden="true" />}
           </span>
-          <span className="text-xs font-medium text-zinc-700 group-hover:text-zinc-900">
+          <span className="text-xs font-bold tracking-tight text-slate-700 group-hover:text-slate-950">
             {placeholder}
           </span>
         </button>

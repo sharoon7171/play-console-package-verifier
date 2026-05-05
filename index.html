@@ -8,10 +8,10 @@
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <meta name="author" content="SQ Tech" />
 
-    <title>Play Console Package Verifier — Register an Android Package Name with a Signed APK</title>
+    <title>Play Console Package Verifier — Register an Android Package Name with a v1 + v2 Signed APK</title>
     <meta
       name="description"
-      content="Free in-browser tool that builds the proof-of-ownership APK required by Android Developer Console and Google Play Console to register a package name. Adds assets/adi-registration.properties and signs the APK with your private key. No Android Studio, no Gradle, no command line. Files never leave your device."
+      content="Build the proof-of-ownership APK Android Developer Console and Google Play Console need to register a package name. Adds assets/adi-registration.properties and produces a v1 + v2 (APK Signature Scheme v2) signed APK — the apksigner-equivalent — entirely in your browser. Files never leave your device."
     />
 
     <link rel="canonical" href="https://play-console-package-verifier.vercel.app/" />
@@ -24,10 +24,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Play Console Package Verifier" />
     <meta property="og:url" content="https://play-console-package-verifier.vercel.app/" />
-    <meta property="og:title" content="Play Console Package Verifier — Register an Android Package Name with a Signed APK" />
+    <meta property="og:title" content="Play Console Package Verifier — Register an Android Package Name with a v1 + v2 Signed APK" />
     <meta
       property="og:description"
-      content="Builds the proof-of-ownership APK required by Android Developer Console and Play Console to register a package name. Adds assets/adi-registration.properties and signs the APK in your browser. No Android Studio, no command line."
+      content="Builds the proof-of-ownership APK Android Developer Console and Play Console need to register a package name. Adds assets/adi-registration.properties and produces a v1 + v2 (APK Signature Scheme v2) signed APK — apksigner-equivalent — directly in your browser. No Android Studio, no command line."
     />
     <meta property="og:locale" content="en_US" />
 
@@ -35,13 +35,13 @@
     <meta name="twitter:title" content="Play Console Package Verifier" />
     <meta
       name="twitter:description"
-      content="Generate the proof-of-ownership APK Android Developer Console and Play Console need to register a package name. Signs in your browser. No SDK, no CLI."
+      content="Generate the proof-of-ownership APK Android Developer Console and Play Console need to register a package name. v1 + v2 signs in your browser — apksigner-equivalent. No SDK, no CLI."
     />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
@@ -51,7 +51,7 @@
         "@type": "WebApplication",
         "name": "Play Console Package Verifier",
         "url": "https://play-console-package-verifier.vercel.app/",
-        "description": "Builds the proof-of-ownership APK that Android Developer Console and Google Play Console require to register an Android package name. Adds assets/adi-registration.properties and signs the APK with your private key in the browser — no Android Studio, Gradle, or command-line tools needed.",
+        "description": "Builds the proof-of-ownership APK that Android Developer Console and Google Play Console require to register an Android package name. Adds assets/adi-registration.properties and produces a v1 + v2 (APK Signature Scheme v2) signed APK — equivalent to what apksigner produces — entirely in the browser. No Android Studio, Gradle, jarsigner, apksigner, zipalign, or keytool needed.",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Any (browser)",
         "browserRequirements": "Requires a modern desktop or mobile browser with JavaScript enabled.",
@@ -103,10 +103,10 @@
           },
           {
             "@type": "Question",
-            "name": "Do I need Android Studio, Gradle, jarsigner, apksigner, or keytool?",
+            "name": "Do I need Android Studio, the Android SDK, Gradle, jarsigner, apksigner, zipalign, or keytool?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. The whole pipeline runs in the browser."
+              "text": "No. The whole pipeline runs in your browser."
             }
           },
           {
@@ -116,13 +116,21 @@
               "@type": "Answer",
               "text": "PKCS#12 keystores (.p12, .pfx) and the .jks / .keystore formats Android uses by default."
             }
+          },
+          {
+            "@type": "Question",
+            "name": "Which APK signature schemes are produced?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Both APK Signature Scheme v1 (JAR signing) and v2 — the same default combination apksigner produces. The v1 .SF file includes the spec-required X-Android-APK-Signed: 2 rollback-protection attribute, and the v2 signing block is inserted before the ZIP central directory per the AOSP specification. Android Developer Console requires a valid v2 signature."
+            }
           }
         ]
       }
     </script>
   </head>
-  <body class="min-h-screen bg-zinc-50 text-zinc-900 antialiased font-sans">
-    <div id="root" class="min-h-screen"></div>
+  <body class="h-screen overflow-hidden bg-slate-50 text-slate-900 antialiased font-sans selection:bg-indigo-200 selection:text-slate-900">
+    <div id="root" class="flex h-full flex-col"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

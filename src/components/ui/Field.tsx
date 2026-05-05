@@ -39,18 +39,25 @@ export default function Field({
 
   return (
     <div className={cn("flex flex-col", className)}>
-      <label htmlFor={htmlFor} className="mb-1 block text-xs font-medium text-zinc-800">
+      <label
+        htmlFor={htmlFor}
+        className="mb-1.5 block text-xs font-bold tracking-tight text-slate-900"
+      >
         {label}
-        {required ? <span className="ml-0.5 text-zinc-400">*</span> : null}
+        {required ? (
+          <span aria-hidden="true" className="ml-0.5 text-rose-500">
+            *
+          </span>
+        ) : null}
       </label>
       {childWithAria}
       {hint ? (
-        <p id={hintId} className="mt-1 text-[11px] leading-snug text-zinc-500">
+        <p id={hintId} className="mt-1 text-[11px] font-medium leading-snug text-slate-500">
           {hint}
         </p>
       ) : null}
       {error ? (
-        <p id={errorId} className="mt-1 text-[11px] font-medium text-red-600">
+        <p id={errorId} className="mt-1 text-[11px] font-bold text-rose-600">
           {error}
         </p>
       ) : null}

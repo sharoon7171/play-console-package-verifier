@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Generate a Google Play Console verification APK in your browser. Adds the required snippet and re-signs the APK with your existing keystore — no Android Studio or command-line tools needed.",
+  "description": "Generate the Android Developer Console / Google Play Console proof-of-ownership APK in your browser. Adds assets/adi-registration.properties and re-signs with your keystore using APK Signature Scheme v1 + v2 (apksigner-equivalent) — no Android Studio or command-line tools needed.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

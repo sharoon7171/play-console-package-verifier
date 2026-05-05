@@ -1,6 +1,6 @@
 # Play Console Package Verifier
 
-Generate the proof-of-ownership APK that **Google Play Console** and **Android Developer Console** require for [Android developer verification](https://developer.android.com/developer-verification/guides) — directly in your browser. Adds the `assets/adi-registration.properties` snippet to an APK and signs it with your private signing key. No Android Studio, no Gradle, no `jarsigner`, no `apksigner`, no `keytool`, no command line.
+Generate the proof-of-ownership APK that **Google Play Console** and **Android Developer Console** require for [Android developer verification](https://developer.android.com/developer-verification/guides) — directly in your browser. Adds the `assets/adi-registration.properties` snippet to an APK and signs it with your private signing key, producing both an [APK Signature Scheme v1 (JAR)](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Signed_JAR_File) and [v2](https://source.android.com/docs/security/features/apksigning/v2) signature — the combination `apksigner` produces by default. No Android Studio, no Gradle, no `jarsigner`, no `apksigner`, no `keytool`, no command line.
 
 **Live tool:** https://play-console-package-verifier.vercel.app
 
@@ -10,7 +10,7 @@ Everything runs locally in your browser. Your APK, keystore, and password never 
 
 ## Why this exists
 
-When you create a new app in Google Play Console, Play tries to **automatically register the package name** for you. If that package name is already known to Android (because someone else — or you — has used it off-Play), Play tells you the name is not available and you have to formally **register the package name** in [Android Developer Console](https://developer.android.com/developer-verification/guides/android-developer-console) before you can keep using it.
+When you create a new app in Google Play Console, Play tries to **automatically register the package name** for you. If that package name is already known to Android (because someone else — or you — has used it off-Play), Play tells you the package name is not available and you have to formally **register the package name** in [Android Developer Console](https://developer.android.com/developer-verification/guides/android-developer-console) before you can keep using it.
 
 That registration requires **proof that you own the private signing key** for the package. The official process ([docs](https://support.google.com/android-developer-console/answer/16640821)) is:
 
@@ -29,7 +29,7 @@ Doing it the official way means an IDE / Gradle project (or `jarsigner` on the c
 - Uses your real keystore (`.jks`, `.keystore`, `.p12`, `.pfx`) — the same one that holds the private key for your package’s signing certificate.
 - Auto-detects the key alias, or accepts an explicit one.
 - Inserts the snippet at exactly `assets/adi-registration.properties` (path is editable in case the console asks for a different location).
-- Produces a JAR-signed APK that Android Developer Console / Play Console accepts as proof of private key ownership.
+- Produces a v1 (JAR) + v2 (APK Signature Scheme v2) signed APK — the same combination `apksigner` produces by default — which Android Developer Console / Play Console accepts as proof of private key ownership.
 - Downloads the result as `<your-apk-name>-verification.apk`.
 - Works offline once the page is loaded.
 
@@ -41,7 +41,7 @@ Doing it the official way means an IDE / Gradle project (or `jarsigner` on the c
 4. Paste the snippet shown by Android Developer Console / Play Console. The file path is pre-filled to `assets/adi-registration.properties`.
 5. Click **Generate verification APK** and upload the downloaded file to the console.
 
-Under the hood the APK is opened with JSZip, the snippet is written to the path you specified, the existing `META-INF/` signatures are stripped, a new `MANIFEST.MF` and signature file are produced, and the signature block is generated with `node-forge` using your private key — the same artifacts `jarsigner` would produce.
+Under the hood the APK is opened with JSZip, the snippet is written to the path you specified, the existing `META-INF/` signatures are stripped, a new `MANIFEST.MF` and `.SF` are produced (with the `X-Android-APK-Signed: 2` rollback-protection attribute), and the `.RSA` PKCS#7 block is generated with `node-forge` using your private key. An [APK Signature Scheme v2](https://source.android.com/docs/security/features/apksigning/v2) signing block is then computed (chunked SHA-256 over the ZIP entries, central directory, and EOCD per the AOSP spec) and spliced in before the central directory — yielding a v1 + v2 signed APK equivalent to what `apksigner` produces.
 
 ## Privacy and security
 
@@ -65,9 +65,17 @@ npm run build
 npm run preview
 ```
 
-## Tech stack
+## Technology Stack
 
-React 19, TypeScript, Vite, Tailwind CSS, JSZip, node-forge, lucide-react.
+This project is built using the following technologies:
+
+- **React 19** – UI development framework
+- **TypeScript** – Static type checking for JavaScript
+- **Vite** – Fast frontend build tool and development server
+- **Tailwind CSS** – Utility-first CSS framework for rapid UI styling
+- **JSZip** – In-browser ZIP file processing
+- **node-forge** – JavaScript implementation of cryptographic utilities
+- **lucide-react** – Icon library for React applications
 
 ## FAQ
 
@@ -95,10 +103,9 @@ Yes. The file path field is editable. Use whatever the console shows you.
 **Where is the official Google sample for the snippet placement?**
 The Android team publishes one here: [`android/security-samples/AndroidDeveloperVerificationAPKSigningExample`](https://github.com/android/security-samples/tree/main/AndroidDeveloperVerificationAPKSigningExample). This tool produces the same on-disk layout.
 
+**Which APK signature schemes are produced?**
+Both [v1 (JAR signing)](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html#Signed_JAR_File) and [v2 (APK Signature Scheme v2)](https://source.android.com/docs/security/features/apksigning/v2) — the same default combination `apksigner` produces. The v1 `.SF` includes the spec-required `X-Android-APK-Signed: 2` rollback-protection attribute, and the v2 signing block is inserted directly before the ZIP central directory per the [AOSP specification](https://source.android.com/docs/security/features/apksigning/v2). Android Developer Console requires a valid v2 signature; both schemes are written in a single pass.
+
 ## Author
 
 Built by [SQ Tech](https://www.sqtech.dev/). Issues and PRs welcome.
-
-## License
-
-MIT

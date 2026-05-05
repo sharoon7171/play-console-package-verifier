@@ -1,5 +1,6 @@
 import JSZip from "jszip";
 import forge from "node-forge";
+import { addV2Signature } from "./apkSignerV2";
 
 export interface SignOptions {
   apkFile: File;
@@ -74,6 +75,7 @@ function buildSignatureFile(
     formatAttribute("Signature-Version", "1.0") +
     formatAttribute("Created-By", "play-console-package-verifier") +
     formatAttribute("SHA-256-Digest-Manifest", sha256Base64(manifestBytes)) +
+    formatAttribute("X-Android-APK-Signed", "2") +
     CRLF;
 
   let body = "";
@@ -212,7 +214,7 @@ export async function signApk(opts: SignOptions): Promise<SignResult> {
   log("Building signature manifest...");
   const sfBytes = buildSignatureFile(manifestBytes, perFileSections);
 
-  log("Signing with your keystore...");
+  log("Signing JAR manifest with your keystore...");
   const rsaBytes = pkcs7DetachedSign(sfBytes, privateKey, certificate);
 
   const safeAlias = (alias || "CERT")
@@ -224,11 +226,18 @@ export async function signApk(opts: SignOptions): Promise<SignResult> {
   outZip.file(`META-INF/${safeAlias}.SF`, sfBytes, { binary: true });
   outZip.file(`META-INF/${safeAlias}.RSA`, rsaBytes, { binary: true });
 
-  log("Packaging verification APK...");
-  const blob = await outZip.generateAsync({
-    type: "blob",
+  log("Packaging APK...");
+  const v1Bytes = await outZip.generateAsync({
+    type: "uint8array",
     compression: "DEFLATE",
     compressionOptions: { level: 6 },
+  });
+
+  log("Adding APK Signature Scheme v2 block...");
+  const finalBytes = await addV2Signature(v1Bytes, privateKey, certificate);
+
+  const blob = new Blob([finalBytes as unknown as ArrayBuffer], {
+    type: "application/vnd.android.package-archive",
   });
 
   return { blob, filename: makeOutputName(opts.apkFile.name) };

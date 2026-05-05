@@ -9,21 +9,21 @@ interface StatusBannerProps {
 }
 
 const variantCls: Record<StatusVariant, string> = {
-  info: "border-zinc-200 bg-zinc-50 text-zinc-800",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-900",
-  error: "border-red-200 bg-red-50 text-red-900",
+  info: "border-blue-200 bg-blue-50 text-blue-950",
+  success: "border-emerald-300 bg-emerald-50 text-emerald-950",
+  error: "border-rose-300 bg-rose-50 text-rose-950",
 };
 
 const iconCls: Record<StatusVariant, string> = {
-  info: "text-zinc-500",
+  info: "text-blue-600",
   success: "text-emerald-600",
-  error: "text-red-600",
+  error: "text-rose-600",
 };
 
 function VariantIcon({ variant }: { variant: StatusVariant }) {
-  if (variant === "success") return <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />;
-  if (variant === "error") return <AlertCircle className="h-3.5 w-3.5" aria-hidden="true" />;
-  return <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />;
+  if (variant === "success") return <CheckCircle2 className="h-4 w-4" aria-hidden="true" />;
+  if (variant === "error") return <AlertCircle className="h-4 w-4" aria-hidden="true" />;
+  return <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />;
 }
 
 export default function StatusBanner({ variant, children }: StatusBannerProps) {
@@ -31,7 +31,7 @@ export default function StatusBanner({ variant, children }: StatusBannerProps) {
     <div
       role={variant === "error" ? "alert" : "status"}
       className={cn(
-        "flex items-start gap-2 rounded-md border px-2.5 py-1.5 text-[11px] leading-snug",
+        "flex items-start gap-2 rounded-lg border px-3 py-2 text-xs font-semibold leading-snug shadow-[0_1px_0_rgba(255,255,255,0.6)_inset,0_1px_2px_rgba(2,6,23,0.05)]",
         variantCls[variant]
       )}
     >
