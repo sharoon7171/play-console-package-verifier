@@ -15,6 +15,8 @@ export interface SignOptions {
 export interface SignResult {
   blob: Blob;
   filename: string;
+  signingCertSha256Colon: string;
+  embeddedSnippetContent: string;
 }
 
 const CRLF = "\r\n";
@@ -142,6 +144,16 @@ function loadKeystore(
   };
 }
 
+function certificateSha256Colon(cert: forge.pki.Certificate): string {
+  const der = forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes();
+  const md = forge.md.sha256.create();
+  md.update(der);
+  const hex = forge.util.bytesToHex(md.digest().bytes()).toUpperCase();
+  const pairs = hex.match(/.{2}/g);
+  if (!pairs) return "";
+  return pairs.join(":");
+}
+
 function pkcs7DetachedSign(
   content: string,
   privateKey: forge.pki.rsa.PrivateKey,
@@ -190,6 +202,7 @@ export async function signApk(opts: SignOptions): Promise<SignResult> {
     opts.password,
     opts.alias?.trim() || undefined
   );
+  const signingCertSha256Colon = certificateSha256Colon(certificate);
   log(`Verified keystore. Using key alias: ${alias}`);
 
   log("Preparing APK for re-signing...");
@@ -240,5 +253,10 @@ export async function signApk(opts: SignOptions): Promise<SignResult> {
     type: "application/vnd.android.package-archive",
   });
 
-  return { blob, filename: makeOutputName(opts.apkFile.name) };
+  return {
+    blob,
+    filename: makeOutputName(opts.apkFile.name),
+    signingCertSha256Colon,
+    embeddedSnippetContent: opts.snippetContent,
+  };
 }

@@ -26,6 +26,8 @@ interface CachedResult {
   blob: Blob;
   filename: string;
   url: string;
+  signingCertSha256Colon: string;
+  embeddedSnippetContent: string;
 }
 
 const STATUS_VARIANT: Record<Exclude<Status["kind"], "idle">, StatusVariant> = {
@@ -78,7 +80,12 @@ export default function SignerForm() {
     setStatus({ kind: "working", message: "Starting..." });
 
     try {
-      const { blob, filename } = await signApk({
+      const {
+        blob,
+        filename,
+        signingCertSha256Colon,
+        embeddedSnippetContent,
+      } = await signApk({
         apkFile,
         keystoreFile,
         password,
@@ -89,7 +96,13 @@ export default function SignerForm() {
       });
 
       const url = URL.createObjectURL(blob);
-      setCached({ blob, filename, url });
+      setCached({
+        blob,
+        filename,
+        url,
+        signingCertSha256Colon,
+        embeddedSnippetContent,
+      });
       triggerDownloadFromUrl(url, filename);
       setStatus({
         kind: "success",
@@ -198,7 +211,7 @@ export default function SignerForm() {
           <Field
             label="File path inside APK"
             htmlFor={pathId}
-            hint="Default matches Play Console's verification requirement."
+            hint="Case-sensitive; use exactly the path Play Console shows. Default is assets/adi-registration.properties."
             required
           >
             <Input
@@ -267,6 +280,36 @@ export default function SignerForm() {
             <StatusBanner variant={STATUS_VARIANT[status.kind]}>
               {status.message}
             </StatusBanner>
+          )}
+
+          {cached && (
+            <div
+              className="rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-3 text-xs text-slate-800 shadow-[0_1px_0_rgba(255,255,255,0.7)_inset]"
+              aria-labelledby="generated-apk-details-title"
+            >
+              <h3
+                id="generated-apk-details-title"
+                className="text-[11px] font-extrabold uppercase tracking-wide text-slate-600"
+              >
+                Generated APK details
+              </h3>
+              <dl className="mt-2 space-y-2">
+                <div>
+                  <dt className="font-bold text-slate-950">Snippet added</dt>
+                  <dd className="mt-0.5 whitespace-pre-wrap break-all font-mono text-[11px] text-slate-700">
+                    {cached.embeddedSnippetContent}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-bold text-slate-950">
+                    SHA-256 (signing certificate)
+                  </dt>
+                  <dd className="mt-0.5 break-all font-mono text-[11px] text-slate-700">
+                    {cached.signingCertSha256Colon}
+                  </dd>
+                </div>
+              </dl>
+            </div>
           )}
         </div>
       </div>
